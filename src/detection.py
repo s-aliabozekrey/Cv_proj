@@ -1,14 +1,38 @@
 import os
+from pathlib import Path
+
 from ultralytics import YOLO
 
-# Load YOLO model once. Prefer local weights, otherwise fall back to a
-# small pretrained weight (will be downloaded by ultralytics if needed).
-WEIGHTS_PATH = "models/yolo_weights.pt"
-if os.path.exists(WEIGHTS_PATH):
-    model = YOLO(WEIGHTS_PATH)
-else:
-    print(f"Warning: weights not found at {WEIGHTS_PATH}. Falling back to 'yolo12n.pt'.")
-    model = YOLO("yolo12n.pt")
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+
+
+def _candidate_weights() -> list[Path]:
+    candidates: list[Path] = []
+
+    env_path = os.environ.get("YOLO_WEIGHTS_PATH")
+    if env_path:
+        candidates.append(Path(env_path))
+
+    candidates.extend(
+        [
+            PROJECT_ROOT / "models" / "yolo_weights.pt",
+            PROJECT_ROOT / "runs" / "detect" / "bowling_pin_detector" / "weights" / "best.pt",
+            PROJECT_ROOT / "yolo12n.pt",
+        ]
+    )
+
+    return candidates
+
+
+def _resolve_weights_path() -> Path:
+    for candidate in _candidate_weights():
+        if candidate.exists():
+            return candidate
+    return PROJECT_ROOT / "yolo12n.pt"
+
+
+model = YOLO(str(_resolve_weights_path()))
 
 def detect_objects(frame):
     results = model(frame, verbose=False)[0]
