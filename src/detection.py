@@ -7,8 +7,8 @@ WEIGHTS_PATH = "models/yolo_weights.pt"
 if os.path.exists(WEIGHTS_PATH):
     model = YOLO(WEIGHTS_PATH)
 else:
-    print(f"Warning: weights not found at {WEIGHTS_PATH}. Falling back to 'yolov8n.pt'.")
-    model = YOLO("yolov8n.pt")
+    print(f"Warning: weights not found at {WEIGHTS_PATH}. Falling back to 'yolo12n.pt'.")
+    model = YOLO("yolo12n.pt")
 
 def detect_objects(frame):
     results = model(frame, verbose=False)[0]

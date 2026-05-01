@@ -50,13 +50,13 @@ def count_fallen_pins(detections):
     if not baseline_locked:
         return 0
 
-    # Match baseline positions to current positions by nearest distance.
+    # Count knocked-out pins by comparing each baseline pin to the nearest
+    # current pin. If the nearest pin moved more than MOVE_THRESHOLD_PX or
+    # is missing, consider that baseline pin knocked out.
     remaining_current = list(current_pins)
-    standing_count = 0
+    knocked = 0
     for base_pos in baseline_positions:
-        if not remaining_current:
-            break
-
+        # find nearest current
         nearest_index = -1
         nearest_distance = float("inf")
         for idx, cur_pos in enumerate(remaining_current):
@@ -65,10 +65,14 @@ def count_fallen_pins(detections):
                 nearest_distance = dist
                 nearest_index = idx
 
-        if nearest_index != -1 and nearest_distance <= MOVE_THRESHOLD_PX:
-            standing_count += 1
+        # if no nearby current pin or it moved beyond threshold => knocked
+        if nearest_index == -1 or nearest_distance > MOVE_THRESHOLD_PX:
+            knocked += 1
+        else:
+            # matched and standing; remove it so it's not reused
             remaining_current.pop(nearest_index)
 
-    pin_baseline = max(TOTAL_PINS, len(baseline_positions))
-    knocked_down = pin_baseline - standing_count
-    return min(pin_baseline, max(0, knocked_down))
+    # baseline should not exceed known TOTAL_PINS
+    pin_baseline = min(TOTAL_PINS, len(baseline_positions))
+    # ensure we don't report more knocked pins than the baseline
+    return min(pin_baseline, max(0, knocked))
