@@ -33,15 +33,14 @@ frames/
 *.mov
 *.mkv
 
+# Ignore model weights and exports
+*.pt
+*.pth
+*.onnx
+
 # But track input videos
 !data/input_videos/
 !data/input_videos/*.mp4
 !data/input_videos/*.avi
 !data/input_videos/*.mov
 !data/input_videos/*.mkv
-
-# Models
-models/
-*.pt
-*.pth
-*.onnx
