@@ -1,0 +1,47 @@
+# Python environments
+venv/
+.venv/
+
+# Python caches
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# OS files
+.DS_Store
+
+# Editor files
+.vscode/
+
+# Outputs / generated files
+runs/
+datasets/
+data/frames/
+data/output_frames/
+output_frames/
+frames/
+
+# Ignore images/frames anywhere
+*.jpg
+*.jpeg
+*.png
+
+# Ignore all videos by default
+*.mp4
+*.avi
+*.mov
+*.mkv
+
+# But track input videos
+!data/input_videos/
+!data/input_videos/*.mp4
+!data/input_videos/*.avi
+!data/input_videos/*.mov
+!data/input_videos/*.mkv
+
+# Models
+models/
+*.pt
+*.pth
+*.onnx

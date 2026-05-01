@@ -1,0 +1,10 @@
+opencv-python
+numpy
+matplotlib
+pandas
+scipy
+ultralytics
+torch
+torchvision
+torchaudio
+deep-sort-realtime
